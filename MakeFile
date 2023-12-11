@@ -1,3 +1,0 @@
-run:
-	clang++-18 -std=c++23 main.cpp -o main
-	./main

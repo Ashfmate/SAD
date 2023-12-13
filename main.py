@@ -1,5 +1,5 @@
 import sys
-import option
+from compiler import Compiler
 # from enum import Enum
 
 def main():
@@ -9,10 +9,8 @@ def main():
 	# If the file is not provided at all, "Please provide a file" message will appear
 	# If the file is provided but is not a .sad file, "Please provide a .sad file" message will appear
 	# If the file is provided and it is a .sad file, for now it will just print the file contents
-	res = option.file_arg.execute(sys.argv[1:2])
-	success = res.error_message()
-	if success is not None:
-		print(option.file_arg.error_message())
+	com = Compiler()
+	com.run(sys.argv)
 
 if __name__ == "__main__":
 	main()

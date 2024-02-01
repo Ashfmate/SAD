@@ -1,4 +1,5 @@
 import re, sys
+from itertools import cycle
 
 def readToString():
 	try:
@@ -13,32 +14,35 @@ def readToString():
 	return file
 
 def tokenize(code: str, patterns: list[(str, str)]):
-	index = 0
+	index = -1
+	size = len(code)
 	tokens = []
-	while index < len(code):
-		found = False
-		for (pat, token) in patterns:
-			match = re.match(pat, code[index:])
-			if match:
-				found = True
-				index += len(match.group())
-				if token in ['id','data', 'operator']:
-					token = f'{token} : {match.group()}'
-				tokens.append(token)
-				break
-		if not found:
+	for item in cycle(patterns):
+		if item is None:
 			index += 1
+			continue
+		if index >= size:
+			break
+		pat, token = item
+		if match:= re.match(pat, code[index:]):
+			index += len(match.group())
+			if token in ['id','data','operator']:
+				token = f'{token} : {match.group()}'
+			tokens.append(token)
+		
+		
 	return tokens
 
 
 def main():
 	patterns = [
+		None,
 		(r'int|char|float', 'data'),
 		(r'[a-zA-Z]\w*', 'id'),
 		(r':','data identifier'),
 		(r'\(', 'left parenthese'),
 		(r'\)', 'right parenthese'),
-		(r'++|/|\*|\+|-|&&|\|\||&|\||=', 'operator'),
+		(r'\+\+|/|\*|\+|-|&&|\|\||&|\||=', 'operator'),
 	]
 	tokens = tokenize(readToString(), patterns)
 	for token in tokens:

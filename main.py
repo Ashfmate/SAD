@@ -22,8 +22,8 @@ def tokenize(code: str, patterns: list[(str, str)]):
 			if match:
 				found = True
 				index += len(match.group())
-				if token in ['id','data']:
-					token = (token, match.group())
+				if token in ['id','data', 'operator']:
+					token = f'{token} : {match.group()}'
 				tokens.append(token)
 				break
 		if not found:
@@ -38,16 +38,7 @@ def main():
 		(r':','data identifier'),
 		(r'\(', 'left parenthese'),
 		(r'\)', 'right parenthese'),
-		(r'\+\+', 'increment operator'),
-		(r'/', 'division operator'),
-		(r'\*', 'multiplication operator'),
-		(r'\+', 'addition operator'),
-		(r'-', 'minus operator'),
-		(r'&&', 'logical and operator'),
-		(r'\|\|', 'logical or operator'),
-		(r'&', 'bitwise and operator'),
-		(r'\|', 'bitwise or operator'),
-		(r'=', 'assignment operator'),
+		(r'++|/|\*|\+|-|&&|\|\||&|\||=', 'operator'),
 	]
 	tokens = tokenize(readToString(), patterns)
 	for token in tokens:

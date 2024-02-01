@@ -25,6 +25,7 @@ def tokenize(code: str, patterns: list[(str, str)]):
 				if token in ['id','data']:
 					token = (token, match.group())
 				tokens.append(token)
+				break
 		if not found:
 			index += 1
 	return tokens

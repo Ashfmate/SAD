@@ -1,30 +1,56 @@
-import sys
-from compiler import Compiler
-# from enum import Enum
+import re, sys
+
+def readToString():
+	try:
+		file = sys.argv[1]
+		file = open(file).read()
+	except IndexError:
+		print("Please provide a file to read", file=sys.stderr)
+		exit(1)
+	except FileNotFoundError:
+		print("The file does not exist, please provide a correct path", file=sys.stderr)
+		exit(2)
+	return file
+
+def tokenize(code: str, patterns: list[(str, str)]):
+	index = 0
+	tokens = []
+	while index < len(code):
+		found = False
+		for (pat, token) in patterns:
+			match = re.match(pat, code[index:])
+			if match:
+				found = True
+				index += len(match.group())
+				if token in ['id','data']:
+					token = (token, match.group())
+				tokens.append(token)
+		if not found:
+			index += 1
+	return tokens
+
 
 def main():
-	# file_arg is a variable that will hold the compiling a file
-	# It should be noted that it is just an example, it will be changed by a lot
-	# This right here is assuming that the first argument passed will be the file argument
-	# If the file is not provided at all, "Please provide a file" message will appear
-	# If the file is provided but is not a .sad file, "Please provide a .sad file" message will appear
-	# If the file is provided and it is a .sad file, for now it will just print the file contents
-	com = Compiler()
-	com.run(sys.argv)
+	patterns = [
+		(r'int|char|float', 'data'),
+		(r'[a-zA-Z]\w*', 'id'),
+		(r':','data identifier'),
+		(r'\(', 'left parenthese'),
+		(r'\)', 'right parenthese'),
+		(r'\+\+', 'increment operator'),
+		(r'/', 'division operator'),
+		(r'\*', 'multiplication operator'),
+		(r'\+', 'addition operator'),
+		(r'-', 'minus operator'),
+		(r'&&', 'logical and operator'),
+		(r'\|\|', 'logical or operator'),
+		(r'&', 'bitwise and operator'),
+		(r'\|', 'bitwise or operator'),
+		(r'=', 'assignment operator'),
+	]
+	tokens = tokenize(readToString(), patterns)
+	for token in tokens:
+		print(token)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	main()
-
-# Things to Add
-# Add argument parser
-# Add more arguments and execute based on the identifiers
-
-# Structure of the team
-# +-------------+---------------------------+
-# |	Team Number	|			Work			|
-# +-------------+---------------------------+
-# |		 1		|		  grammar			|
-# |		 2		|	creating the compiler	|
-# |		 1		|		 arguments			|
-# |		 1		|	 language features		|
-# +-------------+---------------------------+

@@ -1,1 +1,1 @@
-a : int = a + ++(b)
+private a : int = public a + ++(protected b) - 55 * 32.8

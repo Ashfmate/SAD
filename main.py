@@ -1,7 +1,6 @@
 import sys
 from lexical_analyser import tokenize
 import pandas as pd
-import numpy as np
 
 def readToString():
 	try:
@@ -17,12 +16,10 @@ def readToString():
 def main():
 	tokens = tokenize(readToString())
 	table = {
-		'Token Number': [],
 		'Token Name': [],
 		'Lexeme': []
 	}
 	for token in tokens:
-		table['Token Number'].append(token[0].value)
 		table['Token Name'].append(token[0].name)
 		table['Lexeme'].append(token[1])
 

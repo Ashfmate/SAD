@@ -1,50 +1,19 @@
-import re, sys
-from itertools import cycle
+import sys
+from lexical_analyser import tokenize, Token
 
 def readToString():
 	try:
-		file = sys.argv[1]
-		file = open(file).read()
+		with open('file.sad', 'r') as file:
+			return file.read()
 	except IndexError:
 		print("Please provide a file to read", file=sys.stderr)
 		exit(1)
 	except FileNotFoundError:
 		print("The file does not exist, please provide a correct path", file=sys.stderr)
 		exit(2)
-	return file
-
-def tokenize(code: str, patterns: list[(str, str)]):
-	index = -1
-	size = len(code)
-	tokens = []
-	for item in cycle(patterns):
-		if item is None:
-			index += 1
-			continue
-		if index >= size:
-			break
-		pat, token = item
-		if match:= re.match(pat, code[index:]):
-			index += len(match.group())
-			if token in ['id','data','operator']:
-				token = f'{token} : {match.group()}'
-			tokens.append(token)
-		
-		
-	return tokens
-
 
 def main():
-	patterns = [
-		None,
-		(r'int|char|float', 'data'),
-		(r'[a-zA-Z]\w*', 'id'),
-		(r':','data identifier'),
-		(r'\(', 'left parenthese'),
-		(r'\)', 'right parenthese'),
-		(r'\+\+|/|\*|\+|-|&&|\|\||&|\||=', 'operator'),
-	]
-	tokens = tokenize(readToString(), patterns)
+	tokens = tokenize(readToString())
 	for token in tokens:
 		print(token)
 
